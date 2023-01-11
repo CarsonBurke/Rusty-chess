@@ -10,9 +10,10 @@ pub struct Pawn {
 }
 
 impl Pawn {
-    pub fn new(pos: Pos) -> Self {
+    pub fn new(manager: &mut Manager, pos: Pos) -> Self {
 
         return Self {
+            id: manager.new_id(),
             pos: pos.clone(),
             last_pos: pos.clone(),
             ..Default::default()

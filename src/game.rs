@@ -4,17 +4,21 @@ use eventual::Timer;
 extern crate eventual;
 
 pub struct Game {
+    id: String,
     pub tick: i32,
     pub units: HashMap<String, Unit>,
     /* pub units_by_type: HashMap<>, */
-    pub board: Vec<Vec<Option<Unit>>>,
+    /**
+     * A graph with values of unit ids
+     */
+    pub board: Vec<Vec<Option<String>>>,
     pub winner: Option<NeuralNetwork>,
 }
 
 impl Game {
-    pub fn new() -> Self {
+    pub fn new(manager: &mut Manager) -> Self {
 
-        let mut board: Vec<Vec<Option<Unit>>> = vec![];
+        let mut board: Vec<Vec<Option<String>>> = vec![];
         
         let mut i = 0;
         while i < BOARD_SIZE {
@@ -24,6 +28,7 @@ impl Game {
         }
 
         return Self {
+            id: manager.new_id(),
             tick: 0,
             units: HashMap::new(),
             board,

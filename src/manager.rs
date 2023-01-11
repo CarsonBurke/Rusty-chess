@@ -29,7 +29,8 @@ impl Manager {
         while i < self.games_amount {
 
             let id = self.new_id();
-            self.games.insert(id, Game::new());
+            let game = Game::new(self);
+            self.games.insert(id, game);
 
             i += 1;
         }
@@ -45,6 +46,6 @@ impl Manager {
     }
     pub fn run() {
 
-        
+
     }
 }
