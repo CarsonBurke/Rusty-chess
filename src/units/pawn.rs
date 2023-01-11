@@ -1,6 +1,7 @@
 use std::vec;
-use crate::{*, utils::are_xy_same};
+use crate::{*, utils::{are_xy_same, are_positions_same}};
 
+#[derive(Default)]
 pub struct Pawn {
     player_type: String,
     id: String,
@@ -9,6 +10,14 @@ pub struct Pawn {
 }
 
 impl Pawn {
+    pub fn new(pos: Pos) -> Self {
+
+        return Self {
+            pos: pos.clone(),
+            last_pos: pos.clone(),
+            ..Default::default()
+        }
+    }
     pub fn move_to(&mut self, x: i32, y:i32) -> bool {
 
         if !self.can_move(x, y) {
@@ -37,15 +46,15 @@ impl Pawn {
                 x: self.pos.x,
                 y: self.pos.y - 1,
             });
-/* 
+
             // We haven't moved yet
-            if let Some(self.lastPos) = self.lastPos {
+            if are_positions_same(&self.pos, &self.last_pos) {
                 moves.push(Pos {
                     x: self.pos.x,
                     y: self.pos.y - 2,
                 });
             }
-             */
+            
         }
 
         // While player

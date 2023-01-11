@@ -2,15 +2,13 @@ use std::{collections::HashMap};
 
 use crate::game::Game;
 
-use eventual::Timer;
-extern crate eventual;
-
 pub struct Manager {
     id_index: i32,
     pub tick: i32,
-    tick_speed: i32,
-    games: HashMap<String, Game>,
-    games_amount: i32,
+    pub tick_speed: i32,
+    pub games: HashMap<String, Game>,
+    pub games_amount: i32,
+    pub games_ran: i32,
 }
 
 impl Manager {
@@ -22,6 +20,7 @@ impl Manager {
             tick_speed,
             games: HashMap::new(),
             games_amount,
+            games_ran: 0,
         }
     }
     pub fn init(&mut self) {
@@ -31,6 +30,8 @@ impl Manager {
 
             let id = self.new_id();
             self.games.insert(id, Game::new());
+
+            i += 1;
         }
     }
     pub fn new_id(&mut self) -> String {
@@ -42,16 +43,8 @@ impl Manager {
 
 
     }
-    pub fn run(&mut self) {
+    pub fn run() {
 
-        let timer = Timer::new();
-        let ticks = timer.interval_ms(100).iter();
         
-        for _ in ticks {
-
-            println!("{}", self.tick);
-
-            self.tick += 1;
-        }
     }
 }

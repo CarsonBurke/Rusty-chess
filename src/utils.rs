@@ -1,6 +1,6 @@
 use crate::{Pos};
 
-pub fn are_positions_same(pos1: Pos, pos2: Pos) -> bool {
+pub fn are_positions_same(pos1: &Pos, pos2: &Pos) -> bool {
 
     if pos1.x != pos2.x { return false }
     if pos1.y != pos2.y { return false }

@@ -1,11 +1,14 @@
 use std::collections::{HashMap};
-use crate::{units::Unit, neural_network::NeuralNetwork, constants::BOARD_SIZE};
+use crate::{units::Unit, neural_network::NeuralNetwork, constants::BOARD_SIZE, manager::Manager};
+use eventual::Timer;
+extern crate eventual;
 
 pub struct Game {
-    tick: i32,
-    units: HashMap<String, Unit>,
-    board: Vec<Vec<Option<Unit>>>,
-    winner: Option<NeuralNetwork>,
+    pub tick: i32,
+    pub units: HashMap<String, Unit>,
+    /* pub units_by_type: HashMap<>, */
+    pub board: Vec<Vec<Option<Unit>>>,
+    pub winner: Option<NeuralNetwork>,
 }
 
 impl Game {
@@ -20,11 +23,24 @@ impl Game {
             i += 1;
         }
 
-        return Game {
+        return Self {
             tick: 0,
             units: HashMap::new(),
             board,
             winner: None,
+        }
+    }
+    pub fn run(&mut self, manager: &mut Manager) {
+
+        let timer = Timer::new();
+        let ticks = timer.interval_ms(manager.tick_speed.try_into().unwrap()).iter();
+        
+        for _ in ticks {
+
+            println!("{}", self.tick);
+
+            self.tick += 1;
+            manager.tick += 1;
         }
     }
 }

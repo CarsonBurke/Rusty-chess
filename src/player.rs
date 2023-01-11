@@ -1,5 +1,6 @@
 use crate::Pos;
 
+#[derive(Default)]
 pub struct Player {
     player_type: String,
     points: i32,
@@ -8,5 +9,10 @@ pub struct Player {
 }
 
 impl Player {
+    fn new() -> Self {
 
+        return Self {
+            ..Default::default()
+        }
+    }
 }

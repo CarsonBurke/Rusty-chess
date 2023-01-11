@@ -6,7 +6,3 @@ pub struct Unit {
     pos: Pos,
     last_pos: Pos,
 }
-
-impl Unit {
-
-}
