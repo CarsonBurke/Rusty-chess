@@ -1,6 +1,6 @@
 use std::{collections::HashMap};
 
-use crate::game::Game;
+use crate::{game::Game, neural_network::NeuralNetwork};
 
 pub struct Manager {
     id_index: i32,
@@ -9,6 +9,7 @@ pub struct Manager {
     pub games: HashMap<String, Game>,
     pub games_amount: i32,
     pub games_ran: i32,
+    pub networks: HashMap<String, NeuralNetwork>,
 }
 
 impl Manager {
@@ -21,6 +22,7 @@ impl Manager {
             games: HashMap::new(),
             games_amount,
             games_ran: 0,
+            networks: HashMap::new(),
         }
     }
     pub fn init(&mut self) {

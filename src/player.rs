@@ -1,4 +1,4 @@
-use crate::Pos;
+use crate::{Pos, neural_network::NeuralNetwork, game::Game, manager::Manager};
 
 #[derive(Default)]
 pub struct Player {
@@ -6,6 +6,8 @@ pub struct Player {
     points: i32,
     last_move: Pos,
     can_castle: bool,
+    network_id: String,
+    game_id: String,
 }
 
 impl Player {
@@ -14,5 +16,17 @@ impl Player {
         return Self {
             ..Default::default()
         }
+    }
+    fn game<'a>(&'a mut self, manager: &'a mut Manager) -> &mut Game {
+
+        manager.games.get_mut(&self.game_id).unwrap()
+    }
+    fn network<'a>(&'a mut self, manager: &'a mut Manager) -> &mut NeuralNetwork {
+
+        manager.networks.get_mut(&self.network_id).unwrap()
+    }
+    fn run() {
+
+        
     }
 }
