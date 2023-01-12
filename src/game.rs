@@ -1,10 +1,10 @@
 use std::collections::{HashMap};
-use crate::{units::Unit, neural_network::NeuralNetwork, constants::BOARD_SIZE, manager::Manager};
+use crate::{units::{Unit, unit}, neural_network::NeuralNetwork, constants::BOARD_SIZE, manager::Manager, Pos};
 use eventual::Timer;
 extern crate eventual;
 
 pub struct Game {
-    id: String,
+    pub id: String,
     pub tick: i32,
     pub units: HashMap<String, Unit>,
     /* pub units_by_type: HashMap<>, */
@@ -34,6 +34,20 @@ impl Game {
             board,
             winner: None,
         }
+    }
+    pub fn find_unit_at_pos(&mut self, pos: &Pos) -> Option<&Unit>  {
+
+        let x = pos.x as usize;
+        let y = pos.y as usize;
+
+        let mut unit_id = &self.board[x][y];
+
+        if let Some(unit_id) = unit_id {
+
+            return self.units.get(unit_id);
+        }
+
+        return None
     }
     pub fn run(&mut self, manager: &mut Manager) {
 

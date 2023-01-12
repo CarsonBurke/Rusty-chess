@@ -27,6 +27,10 @@ impl Player {
     }
     fn run() {
 
+
+    }
+    fn delete() {
+
         
     }
 }

@@ -17,7 +17,5 @@ fn main() {
     println!("Hello, world!");
 
     let mut manager = Manager::new(1, 1000);
-
-    
 }
 
