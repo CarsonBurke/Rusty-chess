@@ -46,8 +46,14 @@ impl Manager {
 
 
     }
-    pub fn run() {
+    /**
+    * Have one game running until all have been run, reset and repeat once all have been run
+    */
+    pub fn run(&mut self) {
 
+        for game in self.games/* .clone() */ {
 
+            if (game.)
+        }
     }
 }

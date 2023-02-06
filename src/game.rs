@@ -56,6 +56,8 @@ impl Game {
         
         for _ in ticks {
 
+            print!("tick for game")
+            print!(game.id)
             println!("{}", self.tick);
 
             self.tick += 1;
