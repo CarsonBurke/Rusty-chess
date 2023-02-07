@@ -25,6 +25,7 @@ impl Manager {
             networks: HashMap::new(),
         }
     }
+
     pub fn init(&mut self) {
 
         let mut i = 0;
@@ -37,15 +38,21 @@ impl Manager {
             i += 1;
         }
     }
+
     pub fn new_id(&mut self) -> String {
         
         self.id_index += 1;
         return (&self.id_index).to_string()
     }
+
     pub fn reset() {
 
+        for game in self.games/* .clone() */ {
 
+            game.reset()
+        }
     }
+
     /**
     * Have one game running until all have been run, reset and repeat once all have been run
     */
@@ -53,7 +60,15 @@ impl Manager {
 
         for game in self.games/* .clone() */ {
 
-            if (game.)
+            if game.winner {
+
+                continue
+            }
+
+            // The game doesn't have a winner, run it
+
+            game.run();
+            break
         }
     }
 }
