@@ -66,9 +66,9 @@ impl Game {
     }
     pub fn reset(&mut self, manager: &mut Manager) {
 
-        self.tick = 0
-        self.units = HashMap::new()
-        self.winner = None
+        self.tick = 0;
+        self.units = HashMap::new();
+        self.winner = None;
 
         // Reset each coord of the board
 

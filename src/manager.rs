@@ -31,9 +31,33 @@ impl Manager {
         let mut i = 0;
         while i < self.games_amount {
 
+            // game
+
             let id = self.new_id();
             let game = Game::new(self);
             self.games.insert(id, game);
+
+            // neural net
+
+            let inputs: Vec<Input> = vec![
+                Input::new(
+                    "x".to_string(),
+                    vec![1., 3.],
+                    vec!["1".to_string(), "2".to_string()],
+                ),
+                Input::new(
+                    "y".to_string(),
+                    vec![2.],
+                    vec!["1".to_string()],
+                ),
+            ];
+            let outputs: Vec<Output> = vec![
+                Output::new("result".to_string()),
+            ];
+
+            let mut neural_network = NeuralNetwork::new();
+            neural_network.build(inputs, output.len());
+            self.networks.insert(&neural_network.id, neural_network);
 
             i += 1;
         }
