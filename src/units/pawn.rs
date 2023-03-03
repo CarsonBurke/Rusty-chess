@@ -30,8 +30,6 @@ impl Pawn {
 
         // Delete unit at pos if there is one
 
-        //
-
         self.pos.x = x;
         self.pos.y = y;
         return true

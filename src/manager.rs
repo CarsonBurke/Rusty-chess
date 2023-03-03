@@ -1,6 +1,6 @@
 use std::{collections::HashMap};
 
-use crate::{game::Game, neural_network::NeuralNetwork};
+use crate::{game::Game, neural_network::NeuralNetwork, neural_network::Output, neural_network::Input};
 
 pub struct Manager {
     id_index: i32,
@@ -34,7 +34,7 @@ impl Manager {
             // game
 
             let id = self.new_id();
-            let game = Game::new(self);
+            let game = Game::new(id.clone());
             self.games.insert(id, game);
 
             // neural net
@@ -56,8 +56,8 @@ impl Manager {
             ];
 
             let mut neural_network = NeuralNetwork::new();
-            neural_network.build(inputs, output.len());
-            self.networks.insert(&neural_network.id, neural_network);
+            neural_network.build(&inputs, outputs.len());
+            self.networks.insert(neural_network.id.clone(), neural_network);
 
             i += 1;
         }
@@ -69,10 +69,10 @@ impl Manager {
         return (&self.id_index).to_string()
     }
 
-    pub fn reset() {
+    pub fn reset(&mut self) {
 
-        for game in self.games/* .clone() */ {
-
+        for (id, game) in self.games.iter_mut() {
+            /* Split up the parts of self we're trying to pass so we aren't passing self itself */
             game.reset()
         }
     }
@@ -82,16 +82,18 @@ impl Manager {
     */
     pub fn run(&mut self) {
 
-        for game in self.games/* .clone() */ {
-
-            if game.winner {
+        for (id, game) in self.games.iter_mut() {
+            
+/*             
+            if game.winner.unwrap() {
 
                 continue
             }
-
+ */
             // The game doesn't have a winner, run it
 
-            game.run();
+            game.run(self.tick_speed);
+            self.tick += 1;
             break
         }
     }

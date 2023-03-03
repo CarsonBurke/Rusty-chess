@@ -1,1 +1,1 @@
-pub const BOARD_SIZE: i32 = 8;
+pub const BOARD_SIZE: usize = 8;

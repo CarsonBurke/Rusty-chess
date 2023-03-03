@@ -16,6 +16,7 @@ pub struct Pos {
 fn main() {
     println!("Hello, world!");
 
-    let mut manager = Manager::new(1, 1000);
-    manager.run()
+    let mut manager = Manager::new(2, 1000);
+    manager.init();
+    manager.run();
 }

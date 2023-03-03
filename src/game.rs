@@ -16,7 +16,7 @@ pub struct Game {
 }
 
 impl Game {
-    pub fn new(manager: &mut Manager) -> Self {
+    pub fn new(id: String) -> Self {
 
         let mut board: Vec<Vec<Option<String>>> = vec![];
         
@@ -28,7 +28,7 @@ impl Game {
         }
 
         return Self {
-            id: manager.new_id(),
+            id,
             tick: 0,
             units: HashMap::new(),
             board,
@@ -49,22 +49,21 @@ impl Game {
 
         return None
     }
-    pub fn run(&mut self, manager: &mut Manager) {
+    pub fn run(&mut self, tick_speed: i32) {
 
         let timer = Timer::new();
-        let ticks = timer.interval_ms(manager.tick_speed.try_into().unwrap()).iter();
+        let ticks = timer.interval_ms(tick_speed.try_into().unwrap()).iter();
         
         for _ in ticks {
 
-            print!("tick for game")
-            print!(game.id)
-            println!("{}", self.tick);
+            print!("tick for game");
+            println!(" {}", self.id);
+            println!("tick {}", self.tick);
 
             self.tick += 1;
-            manager.tick += 1;
         }
     }
-    pub fn reset(&mut self, manager: &mut Manager) {
+    pub fn reset(&mut self) {
 
         self.tick = 0;
         self.units = HashMap::new();
@@ -72,10 +71,10 @@ impl Game {
 
         // Reset each coord of the board
 
-        let mut i = 0;
+        let mut i: usize = 0;
         while i < BOARD_SIZE {
 
-            board[i].clear();
+            self.board[i].clear();
             i += 1;
         } 
     }
