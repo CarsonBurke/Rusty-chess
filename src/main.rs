@@ -7,7 +7,7 @@ pub mod neural_network;
 pub mod constants;
 pub mod player;
 
-#[derive(Default, Clone)]
+#[derive(Default, Debug, Clone)]
 pub struct Pos {
     x: i32,
     y: i32,

@@ -2,6 +2,9 @@ use std::{collections::HashMap};
 
 use crate::{game::Game, neural_network::NeuralNetwork, neural_network::Output, neural_network::Input};
 
+use eventual::Timer;
+extern crate eventual;
+
 pub struct Manager {
     id_index: i32,
     pub tick: i32,
@@ -83,18 +86,23 @@ impl Manager {
     pub fn run(&mut self) {
 
         for (id, game) in self.games.iter_mut() {
+
+            let timer = Timer::new();
+            let ticks = timer.interval_ms(self.tick_speed.try_into().unwrap()).iter();
             
-/*             
-            if game.winner.unwrap() {
+            for _ in ticks {
 
-                continue
+                let mut winner = &game.winner;
+                if let Some(winner) = winner {
+
+                    break;
+                }
+
+                // The game doesn't have a winner, run it
+
+                game.run();
+                self.tick += 1;
             }
- */
-            // The game doesn't have a winner, run it
-
-            game.run(self.tick_speed);
-            self.tick += 1;
-            break
         }
     }
 }

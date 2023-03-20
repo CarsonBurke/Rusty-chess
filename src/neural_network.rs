@@ -85,7 +85,7 @@ impl Output {
     }
 }
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct NeuralNetwork {
     pub id: String,
     pub weight_layers: Vec<Vec<Vec<f32>>>,

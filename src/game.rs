@@ -1,8 +1,7 @@
 use std::collections::{HashMap};
 use crate::{units::{Unit, unit}, neural_network::NeuralNetwork, constants::BOARD_SIZE, manager::Manager, Pos};
-use eventual::Timer;
-extern crate eventual;
 
+#[derive(Debug)]
 pub struct Game {
     pub id: String,
     pub tick: i32,
@@ -49,23 +48,22 @@ impl Game {
 
         return None
     }
-    pub fn run(&mut self, tick_speed: i32) {
+    pub fn run(&mut self) {
 
-        let timer = Timer::new();
-        let ticks = timer.interval_ms(tick_speed.try_into().unwrap()).iter();
-        
-        for _ in ticks {
+        print!("tick for game");
+        println!(" {}", self.id);
+        println!("tick {}", self.tick);
 
-            print!("tick for game");
-            println!(" {}", self.id);
-            println!("tick {}", self.tick);
+        if self.tick > 5 {
 
-            self.tick += 1;
+            self.winner = Some(NeuralNetwork::new());
+            return;
         }
+
+        self.tick += 1;
     }
     pub fn reset(&mut self) {
 
-        self.tick = 0;
         self.units = HashMap::new();
         self.winner = None;
 
