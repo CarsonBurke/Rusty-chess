@@ -6,12 +6,12 @@ use eventual::Timer;
 extern crate eventual;
 
 pub struct Manager {
-    id_index: i32,
-    pub tick: i32,
+    id_index: i128,
+    pub tick: i128,
     pub tick_speed: i32,
     pub games: HashMap<String, Game>,
     pub games_amount: i32,
-    pub games_ran: i32,
+    pub games_ran: i128,
     pub networks: HashMap<String, NeuralNetwork>,
 }
 
@@ -104,5 +104,7 @@ impl Manager {
                 self.tick += 1;
             }
         }
+
+        println!("End")
     }
 }

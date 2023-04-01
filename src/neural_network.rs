@@ -7,7 +7,6 @@ use rand::Rng;
 extern crate rand;
 
 extern crate float_ord;
-use float_ord::FloatOrd;
 
 pub struct NeuralNetworkManager {
     id_index: i32,

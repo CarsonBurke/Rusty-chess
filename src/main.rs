@@ -7,7 +7,7 @@ pub mod neural_network;
 pub mod constants;
 pub mod player;
 
-#[derive(Default, Debug, Clone)]
+#[derive(Default, Debug, Clone, Copy)]
 pub struct Pos {
     x: i32,
     y: i32,
@@ -16,7 +16,7 @@ pub struct Pos {
 fn main() {
     println!("Hello, world!");
 
-    let mut manager = Manager::new(2, 1000);
+    let mut manager = Manager::new(1, 100);
     manager.init();
     manager.run();
 }
