@@ -72,11 +72,18 @@ impl Unit {
             
         }
 
-        // While player
+        // White player
 
 
 
         return vec![]
+    }
+
+    pub fn find_knight_moves(&mut self, manager: &mut Manager) {
+
+        let mut moves: Vec<Pos> = vec![];
+
+        
     }
 
     pub fn find_moves(&mut self, manager: &mut Manager) -> Vec<Pos> {
