@@ -1,6 +1,4 @@
-use crate::{*, utils::{are_xy_same, are_positions_same}};
-
-
+use crate::{*, utils::{are_xy_same, are_positions_same}, constants::{KNIGHT_OFFSETS, PAWN_ATTACK_OFFSETS_BLACK}};
 
 /**
  * Only unit for all types
@@ -50,17 +48,27 @@ impl Unit {
 
         if self.player_type == "black" {
 
-            moves.push(Pos {
+            let pos = Pos {
                 x: self.pos.x,
-                y: self.pos.y - 1,
-            });
+                y: self.pos.y - 1
+            };
+
+            // If there is no unit
+
+            if is_pos_inside_board(pos) && match self.game(manager).find_unit_at_pos(&pos) {
+                None => true,
+                _ => false
+            } {
+                
+                moves.push(pos)
+            }
 
             // We haven't moved yet and there are no units in the way
 
-            let pos = self.pos.clone();
+            let self_pos = self.pos.clone();
 
-            if are_positions_same(&self.pos, &self.last_pos) && 
-            match self.game(manager).find_unit_at_pos(&pos) {
+            if is_pos_inside_board(pos) && are_positions_same(&self.pos, &self.last_pos) && 
+            match self.game(manager).find_unit_at_pos(&self_pos) {
                 None => false,
                 _ => true
             } {
@@ -69,7 +77,31 @@ impl Unit {
                     y: self.pos.y - 2,
                 });
             }
+
+            for offset in PAWN_ATTACK_OFFSETS_BLACK {
+                let pos = Pos {
+                    x: self.pos.x + offset.x,
+                    y: self.pos.y + offset.y
+                };
+
+                if is_pos_inside_board(pos) { continue }
+
+                let unit_at_pos = self.game(manager).find_unit_at_pos(&pos);
+
+                // If there is a unit
+    
+                if (match unit_at_pos {
+                    None => false,
+                    _ => true
+                }) {
+    
+                    // Don't allow move on our own units
+    
+                    if (unit_at_pos.player_type == self.player_type) { continue }
+                } 
+            }
             
+            return moves
         }
 
         // White player
@@ -83,7 +115,32 @@ impl Unit {
 
         let mut moves: Vec<Pos> = vec![];
 
-        
+        for offset in KNIGHT_OFFSETS {
+            let pos = Pos {
+                x: self.pos.x + offset.x,
+                y: self.pos.y + offset.y,
+            };
+
+            if !is_pos_inside_board(pos) { continue }
+
+            let unit_at_pos = self.game(manager).find_unit_at_pos(&pos);
+
+            // If there is a unit
+
+            if (match unit_at_pos {
+                None => false,
+                _ => true
+            }) {
+
+                // Don't allow move on our own units
+
+                if (unit_at_pos.player_type == self.player_type) { continue }
+            }
+
+            moves.push(pos)
+        }
+
+        return moves
     }
 
     pub fn find_moves(&mut self, manager: &mut Manager) -> Vec<Pos> {
