@@ -36,12 +36,13 @@ impl Game {
     }
     pub fn init(&mut self, manager: &mut Manager) {
 
-        for i in 0..BOARD_SIZE {
+        let y: usize = 7;
+        for x in 0..BOARD_SIZE {
 
-            let unit = Unit::new(manager, self, Pos { x:2, y:2 });
+            let unit = Unit::new(manager, self, Pos { x: x as i32, y: y as i32 });
             let clone = unit.clone();
     
-            self.board[i][i] = Some(unit.id.clone());
+            self.board[x][y] = Some(unit.id.clone());
             self.units.insert(unit.id, clone);
 
             

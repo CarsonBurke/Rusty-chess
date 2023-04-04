@@ -16,5 +16,5 @@ pub fn are_xy_same(x1: i32, y1: i32, x2: i32, y2: i32) -> bool {
 
 pub fn is_pos_inside_board(pos: &Pos) -> bool {
 
-    return pos.x >= 0 && pos.x < BOARD_SIZE && pos.y >= 0 && pos.y < BOARD_SIZE
+    return pos.x >= 0 && pos.x < BOARD_SIZE.try_into().unwrap() && pos.y >= 0 && pos.y < BOARD_SIZE.try_into().unwrap()
 }
