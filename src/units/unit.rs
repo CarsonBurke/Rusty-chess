@@ -166,9 +166,9 @@ impl Unit {
         return Some(pos);
     }
 
-    fn find_moves_for_offset(&mut self, manager: &mut Manager, offsets: &[Pos]) -> Vec<Pos> {
+    fn find_moves_for_offset(&mut self, manager: &mut Manager, offsets: Vec<Pos>) -> Vec<Pos> {
 
-        let moves = vec![];
+        let mut moves = vec![];
 
         for offset in offsets {
 
@@ -183,21 +183,23 @@ impl Unit {
                 }
             }
         }
+
+        return moves
     }
 
     pub fn find_queen_moves(&mut self, manager: &mut Manager) -> Vec<Pos> {
 
-        return self.find_moves_for_offset(manager, ADJACENT_OFFSETS)
+        return self.find_moves_for_offset(manager, ADJACENT_OFFSETS.to_vec())
     }
 
     pub fn find_bishop_moves(&mut self, manager: &mut Manager) -> Vec<Pos> {
 
-        return self.find_moves_for_offset(manager, BISHOP_OFFSETS)
+        return self.find_moves_for_offset(manager, BISHOP_OFFSETS.to_vec())
     }
 
     pub fn find_castle_moves(&mut self, manager: &mut Manager) -> Vec<Pos> {
 
-        return self.find_moves_for_offset(manager, CASTLE_OFFSETS)
+        return self.find_moves_for_offset(manager, CASTLE_OFFSETS.to_vec())
     }
 
     pub fn find_moves(&mut self, manager: &mut Manager) -> Vec<Pos> {
