@@ -1,5 +1,5 @@
 use std::{collections::{HashMap}};
-use crate::{units::{Unit, unit}, neural_network::NeuralNetwork, constants::BOARD_SIZE, manager::Manager, Pos};
+use crate::{units::{Unit, unit}, neural_network::NeuralNetwork, constants::{BOARD_SIZE, UNIT_GRAPHICS}, manager::Manager, Pos};
 
 #[derive(Debug)]
 pub struct Game {
@@ -38,7 +38,7 @@ impl Game {
 
         let y: usize = 7;
         for x in 0..BOARD_SIZE {
-            
+
             let unit = Unit::new(manager, self, Pos { x: x as i32, y: y as i32 });
             let clone = unit.clone();
             
@@ -61,6 +61,24 @@ impl Game {
         }
 
         return None
+    }
+    pub fn visualize(&mut self) {
+
+        for x in 0..BOARD_SIZE {
+
+            visuals_board.push(vec![]);
+
+            for y in 0..BOARD_SIZE {
+            
+                let unit = &self.board[x][y];
+                match unit {
+                    Some(unit) => { continue },
+                    _ => { print(UNIT_GRAPHICS[unit.player_type][unit.unit_type]) }
+                }
+            }
+
+            println!("{}", x);
+        }
     }
     pub fn run(&mut self) {
 
