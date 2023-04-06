@@ -38,14 +38,14 @@ impl Game {
 
         let y: usize = 7;
         for x in 0..BOARD_SIZE {
-
+            
             let unit = Unit::new(manager, self, Pos { x: x as i32, y: y as i32 });
             let clone = unit.clone();
-    
+            
             self.board[x][y] = Some(unit.id.clone());
             self.units.insert(unit.id, clone);
-
             
+
         }
     }
     pub fn find_unit_at_pos(&mut self, pos: &Pos) -> Option<&Unit>  {

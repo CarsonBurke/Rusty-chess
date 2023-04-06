@@ -127,3 +127,35 @@ pub const PAWN_ATTACK_OFFSETS_WHITE: [Pos; 2] = [
         y: 1,
     }
 ];
+#[derive(Debug)]
+pub struct ASCIIGraphics<'a> {
+    king: &'a str,
+    queen: &'a str,
+    bishop: &'a str,
+    castle: &'a str,
+    knight: &'a str,
+    pawn: &'a str,
+}
+#[derive(Debug)]
+pub struct Players<'a> {
+    black: ASCIIGraphics<'a>,
+    white: ASCIIGraphics<'a>,
+}
+pub const UNIT_GRAPHICS: Players = Players {
+    black: ASCIIGraphics {
+        king: "♚",
+        queen: "♛",
+        bishop: "♝",
+        castle: "♜",
+        knight: "♞",
+        pawn: "♟",
+    },
+    white: ASCIIGraphics {
+        king: "♔",
+        queen: "♕",
+        bishop: "♗",
+        castle: "♖",
+        knight: "♘",
+        pawn: "♙",
+    },
+};
