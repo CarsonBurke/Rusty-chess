@@ -10,18 +10,18 @@ use tokio::time::{self, Duration};
 extern crate tokio;
 
 pub struct Manager {
-    id_index: i128,
-    pub tick: i128,
-    pub tick_speed: i32,
+    id_index: u64,
+    pub tick: u64,
+    pub tick_speed: u64,
     pub games: HashMap<String, Game>,
-    pub games_amount: i32,
-    pub games_ran: i128,
+    pub games_amount: u32,
+    pub games_ran: u64,
     pub networks: HashMap<String, NeuralNetwork>,
     pub unit_graphics: HashMap<String, HashMap<String, String>>,
 }
 
 impl Manager {
-    pub fn new(games_amount: i32, tick_speed: i32) -> Self {
+    pub fn new(games_amount: u32, tick_speed: u64) -> Self {
 
         let mut unit_graphics: HashMap<String, HashMap<String, String>> = HashMap::new();
 
@@ -119,13 +119,12 @@ impl Manager {
     * Have one game running until all have been run, reset and repeat once all have been run
     */
     pub async fn run(&mut self) {
-        println!("d");
+
         for (id, game) in self.games.iter_mut() {
 
-            let mut interval = time::interval(Duration::from_millis(self.tick_speed.try_into().unwrap()));
+            let mut interval = time::interval(Duration::from_millis(self.tick_speed));
             
             loop {
-                println!("h");
 
                 let mut winner = &game.winner;
                 if let Some(winner) = winner {

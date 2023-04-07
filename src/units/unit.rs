@@ -11,7 +11,7 @@ pub struct Unit {
     pub unit_type: String,
     pub id: String,
     pub pos: Pos,
-    last_pos: Pos,
+    pub last_pos: Pos,
     game_id: String,
 }
 
@@ -19,7 +19,7 @@ pub struct Unit {
  * Merge impl into Game for finer control with Game.units
  */
 impl Unit {
-    pub fn new(manager: &mut Manager, game: &mut Game, pos: Pos, player_type: String, unit_type: String) -> Self {
+    pub fn new(manager: &mut Manager, game: &Game, pos: Pos, player_type: String, unit_type: String) -> Self {
 
         return Self {
             id: manager.new_id(),
@@ -34,7 +34,7 @@ impl Unit {
     /**
      * Consider giving as inputs to the neural network
      */
-    pub fn find_pawn_moves(&mut self, game: &mut Game) -> Vec<Pos> {
+    pub fn find_pawn_moves(&self, game: &Game) -> Vec<Pos> {
 
         let mut moves: Vec<Pos> = vec![];
 
@@ -103,7 +103,7 @@ impl Unit {
         return moves
     }
 
-    fn try_offset(&mut self, game: &mut Game, offset: &Pos) -> Option<Pos> {
+    fn try_offset(&self, game: &Game, offset: &Pos) -> Option<Pos> {
 
         let pos = Pos {
             x: self.pos.x + offset.x,
@@ -129,7 +129,7 @@ impl Unit {
         return Some(pos);
     }
 
-    pub fn find_knight_moves(&mut self, game: &mut Game) -> Vec<Pos> {
+    pub fn find_knight_moves(&self, game: &Game) -> Vec<Pos> {
 
         let mut moves: Vec<Pos> = vec![];
 
@@ -144,7 +144,7 @@ impl Unit {
         return moves
     }
 
-    pub fn find_king_moves(&mut self, game: &mut Game) -> Vec<Pos> {
+    pub fn find_king_moves(&self, game: &Game) -> Vec<Pos> {
 
         let mut moves: Vec<Pos> = vec![];
 
@@ -160,7 +160,7 @@ impl Unit {
         return moves
     }
 
-    fn find_moves_for_offset(&mut self, game: &mut Game, offsets: Vec<Pos>) -> Vec<Pos> {
+    fn find_moves_for_offset(&self, game: &Game, offsets: Vec<Pos>) -> Vec<Pos> {
 
         let mut moves = vec![];
 
@@ -168,8 +168,7 @@ impl Unit {
 
             // Keep checking offsets until
 
-            while true {
-
+            loop {
                 let pos = self.try_offset(game, &offset);
                 match pos {
                     Some(pos) => moves.push(pos),
@@ -181,22 +180,22 @@ impl Unit {
         return moves
     }
 
-    pub fn find_queen_moves(&mut self, game: &mut Game) -> Vec<Pos> {
+    pub fn find_queen_moves(&self, game: &Game) -> Vec<Pos> {
 
         return self.find_moves_for_offset(game, ADJACENT_OFFSETS.to_vec())
     }
 
-    pub fn find_bishop_moves(&mut self, game: &mut Game) -> Vec<Pos> {
+    pub fn find_bishop_moves(&self, game: &Game) -> Vec<Pos> {
 
         return self.find_moves_for_offset(game, BISHOP_OFFSETS.to_vec())
     }
 
-    pub fn find_castle_moves(&mut self, game: &mut Game) -> Vec<Pos> {
+    pub fn find_castle_moves(&self, game: &Game) -> Vec<Pos> {
 
         return self.find_moves_for_offset(game, CASTLE_OFFSETS.to_vec())
     }
 
-    pub fn find_moves(&mut self, game: &mut Game) -> Vec<Pos> {
+    pub fn find_moves(&self, game: &Game) -> Vec<Pos> {
 
         if self.unit_type == "king" {
             return self.find_king_moves(game)
@@ -219,8 +218,8 @@ impl Unit {
 
         return vec![]
     }
-
-    pub fn can_move(&mut self, game: &mut Game, x: i32, y: i32) -> bool {
+/* 
+    pub fn can_move(&self, game: &Game, x: i32, y: i32) -> bool {
 
         for move_pos in self.find_moves(game) {
 
@@ -231,37 +230,24 @@ impl Unit {
         }
 
         return false
-    }
-    pub fn move_to(&mut self, game: &mut Game, x: i32, y:i32) -> bool {
-
-        if !self.can_move(game, x, y) {
-
-            return false
-        }
-
-        let old_x = self.pos.x;
-        let old_y = self.pos.y;
-
-        self.last_pos = self.pos.clone();
-        game.board[old_y as usize][old_x as usize] = "".to_string();
-
-        // Delete unit at pos if there is one
-
-        self.pos.x = x;
-        self.pos.y = y;
-        println!("{:?}", self.pos);
-        game.board[y as usize][x as usize] = self.id.clone();
-        return true
-    }
-    pub fn any_move(&mut self, game: &mut Game) {
+    } */
+    pub fn any_move_request(&self, game: &Game) -> Option<MoveRequest> {
 
         let moves = self.find_moves(game);
-        if moves.len() == 0 { return };
+        if moves.len() == 0 { return None }
 
-        self.move_to(game, moves[0].x, moves[0].y);
+        return Some(MoveRequest {
+            unit_id: self.id.clone(),
+            pos: moves[0],
+        })
     }
-    fn game<'a>(&'a mut self, manager: &'a mut Manager) -> &mut Game {
+    pub fn move_request(&mut self, game: &Game) {
+
+
+    }
+    /*     
+    fn game<'a>(&'a mut self, manager: &'a mut Manager) -> &Game {
 
         manager.games.get_mut(&self.game_id).unwrap()
-    }
+    } */
 }

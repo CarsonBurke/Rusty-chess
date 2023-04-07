@@ -12,6 +12,11 @@ pub struct Pos {
     x: i32,
     y: i32,
 }
+#[derive(Default, Debug, Clone)]
+pub struct MoveRequest {
+    unit_id: String,
+    pos: Pos,
+}
 
 #[tokio::main]
 async fn main() {
