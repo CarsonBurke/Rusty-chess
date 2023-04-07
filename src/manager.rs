@@ -28,24 +28,27 @@ impl Manager {
         // Black
         
         let mut player_type_graphics: HashMap<String, String> = HashMap::new();
-        player_type_graphics.insert("king".to_string(), "♚".to_string());
-        player_type_graphics.insert("queen".to_string(), "♛".to_string());
-        player_type_graphics.insert("bishop".to_string(), "♝".to_string());
-        player_type_graphics.insert("castle".to_string(), "♜".to_string());
-        player_type_graphics.insert("knight".to_string(), "♞".to_string());
-        player_type_graphics.insert("pawn".to_string(), "♟".to_string());
 
-        unit_graphics.insert("black".to_string(), player_type_graphics);
-
-        // White
-
-        player_type_graphics = HashMap::new();
         player_type_graphics.insert("king".to_string(), "♔".to_string());
         player_type_graphics.insert("queen".to_string(), "♕".to_string());
         player_type_graphics.insert("bishop".to_string(), "♗".to_string());
         player_type_graphics.insert("castle".to_string(), "♖".to_string());
         player_type_graphics.insert("knight".to_string(), "♘".to_string());
         player_type_graphics.insert("pawn".to_string(), "♙".to_string());
+
+        unit_graphics.insert("black".to_string(), player_type_graphics);
+
+
+        // White
+
+        player_type_graphics = HashMap::new();
+        
+        player_type_graphics.insert("king".to_string(), "♚".to_string());
+        player_type_graphics.insert("queen".to_string(), "♛".to_string());
+        player_type_graphics.insert("bishop".to_string(), "♝".to_string());
+        player_type_graphics.insert("castle".to_string(), "♜".to_string());
+        player_type_graphics.insert("knight".to_string(), "♞".to_string());
+        player_type_graphics.insert("pawn".to_string(), "♟".to_string());
 
         unit_graphics.insert("white".to_string(), player_type_graphics);
 

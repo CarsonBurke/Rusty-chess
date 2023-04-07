@@ -1,19 +1,24 @@
 use crate::{Pos, neural_network::NeuralNetwork, game::Game, manager::Manager};
 
-#[derive(Default)]
+#[derive(Default, Debug)]
 pub struct Player {
-    player_type: String,
-    points: i32,
-    last_move: Pos,
-    can_castle: bool,
-    network_id: String,
-    game_id: String,
+    pub player_type: String,
+    pub points: i32,
+    /**
+     * Wether the player moves on even ticks if true, and if false, odd
+     */
+    pub turn_mod: bool,
+    pub can_castle: bool,
+    pub network_id: String,
+    pub game_id: String,
 }
 
 impl Player {
-    fn new() -> Self {
+    pub fn new(player_type: String, turn_mod: bool) -> Self {
 
         return Self {
+            player_type: player_type,
+            turn_mod: turn_mod,
             ..Default::default()
         }
     }

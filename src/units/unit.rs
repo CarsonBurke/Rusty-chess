@@ -1,4 +1,4 @@
-use crate::{*, utils::{are_xy_same, are_positions_same, is_pos_inside_board}, constants::{KNIGHT_OFFSETS, PAWN_ATTACK_OFFSETS_BLACK, ADJACENT_OFFSETS, BISHOP_OFFSETS, CASTLE_OFFSETS}};
+use crate::{*, utils::{are_xy_same, are_positions_same, is_pos_inside_board}, constants::{KNIGHT_OFFSETS, PAWN_ATTACK_OFFSETS_BLACK, ADJACENT_OFFSETS, BISHOP_OFFSETS, CASTLE_OFFSETS, PAWN_ATTACK_OFFSETS_WHITE}};
 
 /**
  * Only unit for all types
@@ -98,7 +98,58 @@ impl Unit {
 
         // White player
 
+        let mut pos = Pos {
+            x: self.pos.x,
+            y: self.pos.y + 1
+        };
+        
+        // If there is no unit
 
+        if is_pos_inside_board(&pos) && match game.find_unit_at_pos(&pos) {
+            None => true,
+            _ => false
+        } {
+            
+            moves.push(pos)
+        }
+
+        pos = Pos {
+            x: self.pos.x,
+            y: self.pos.y + 2,
+        };
+        
+        // We haven't moved yet and there are no units in the way
+
+        let self_pos = self.pos.clone();
+
+        if is_pos_inside_board(&pos) && are_positions_same(&self.pos, &self.last_pos) && 
+        match game.find_unit_at_pos(&self_pos) {
+            None => false,
+            _ => true
+        } {
+            moves.push(pos);
+        }
+        
+        for offset in PAWN_ATTACK_OFFSETS_WHITE {
+            pos = Pos {
+                x: self.pos.x + offset.x,
+                y: self.pos.y + offset.y
+            };
+
+            if !is_pos_inside_board(&pos) { continue }
+
+            let self_player_type = self.player_type.clone();
+            let unit_at_pos = game.find_unit_at_pos(&pos);
+
+            match unit_at_pos {
+                Some(unit_at_pos) => {
+                    // Don't allow move on our own units
+
+                    if unit_at_pos.player_type == self_player_type { continue }
+                },
+                _ => {},
+            };
+        }
 
         return moves
     }
