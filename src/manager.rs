@@ -13,10 +13,39 @@ pub struct Manager {
     pub games_amount: i32,
     pub games_ran: i128,
     pub networks: HashMap<String, NeuralNetwork>,
+    pub unit_graphics: HashMap<String, HashMap<String, String>>,
 }
 
 impl Manager {
     pub fn new(games_amount: i32, tick_speed: i32) -> Self {
+
+        let mut unit_graphics: HashMap<String, HashMap<String, String>> = HashMap::new();
+
+        // Black
+        
+        let mut player_type_graphics: HashMap<String, String> = HashMap::new();
+        player_type_graphics.insert("king".to_string(), "♚".to_string());
+        player_type_graphics.insert("queen".to_string(), "♛".to_string());
+        player_type_graphics.insert("bishop".to_string(), "♝".to_string());
+        player_type_graphics.insert("castle".to_string(), "♜".to_string());
+        player_type_graphics.insert("knight".to_string(), "♞".to_string());
+        player_type_graphics.insert("pawn".to_string(), "♟".to_string());
+
+        unit_graphics.insert("black".to_string(), player_type_graphics);
+
+        // White
+
+        player_type_graphics = HashMap::new();
+        player_type_graphics.insert("king".to_string(), "♔".to_string());
+        player_type_graphics.insert("queen".to_string(), "♕".to_string());
+        player_type_graphics.insert("bishop".to_string(), "♗".to_string());
+        player_type_graphics.insert("castle".to_string(), "♖".to_string());
+        player_type_graphics.insert("knight".to_string(), "♘".to_string());
+        player_type_graphics.insert("pawn".to_string(), "♙".to_string());
+
+        unit_graphics.insert("white".to_string(), player_type_graphics);
+
+        // Return construction
 
         return Self { 
             id_index: 0,
@@ -26,6 +55,7 @@ impl Manager {
             games_amount,
             games_ran: 0,
             networks: HashMap::new(),
+            unit_graphics: unit_graphics,
         }
     }
 
@@ -37,7 +67,8 @@ impl Manager {
             // game
 
             let id = self.new_id();
-            let game = Game::new(id.clone());
+            let mut game = Game::new(id.clone());
+            game.init(self);
             self.games.insert(id, game);
 
             // neural net
@@ -100,7 +131,7 @@ impl Manager {
 
                 // The game doesn't have a winner, run it
 
-                game.run();
+                game.run(self.unit_graphics.clone());
                 self.tick += 1;
             }
         }

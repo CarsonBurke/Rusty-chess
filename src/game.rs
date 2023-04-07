@@ -1,5 +1,5 @@
-use std::{collections::{HashMap}};
-use crate::{units::{Unit, unit}, neural_network::NeuralNetwork, constants::{BOARD_SIZE, UNIT_GRAPHICS}, manager::Manager, Pos};
+use std::{collections::{HashMap}, borrow::BorrowMut};
+use crate::{units::{Unit, unit}, neural_network::NeuralNetwork, constants::{BOARD_SIZE}, manager::Manager, Pos};
 
 #[derive(Debug)]
 pub struct Game {
@@ -10,20 +10,20 @@ pub struct Game {
     /**
      * A graph with values of unit ids
      */
-    pub board: Vec<Vec<Option<String>>>,
+    pub board: Vec<Vec<String>>,
     pub winner: Option<NeuralNetwork>,
 }
 
 impl Game {
     pub fn new(id: String) -> Self {
 
-        let mut board: Vec<Vec<Option<String>>> = vec![];
-        
-        let mut i = 0;
-        while i < BOARD_SIZE {
+        let mut board: Vec<Vec<String>> = vec![];
 
+        for y in 0..BOARD_SIZE {
             board.push(vec![]);
-            i += 1;
+            for x in 0..BOARD_SIZE {
+                board[y].push("".to_string());
+            }
         }
 
         return Self {
@@ -39,10 +39,10 @@ impl Game {
         let y: usize = 7;
         for x in 0..BOARD_SIZE {
 
-            let unit = Unit::new(manager, self, Pos { x: x as i32, y: y as i32 });
+            let unit = Unit::new(manager, self, Pos { x: x as i32, y: y as i32 }, "black".to_string(), "pawn".to_string());
             let clone = unit.clone();
             
-            self.board[x][y] = Some(unit.id.clone());
+            self.board[y][x] = unit.id.clone();
             self.units.insert(unit.id, clone);
             
 
@@ -53,38 +53,59 @@ impl Game {
         let x = pos.x as usize;
         let y = pos.y as usize;
 
-        let unit_id = &self.board[x][y];
+        let unit_id = &self.board[y][x];
+        return self.units.get(unit_id);
+    }
+    pub fn visualize_grid(&mut self) {
 
-        if let Some(unit_id) = unit_id {
+        for y in 0..BOARD_SIZE {
+            println!();
+            for x in 0..BOARD_SIZE {
 
-            return self.units.get(unit_id);
+                print!(" ");
+                print!("{}", x);
+                print!(",");
+                print!("{}", y);
+                print!(" ");
+            }
         }
 
-        return None
+        println!();
+        println!();
     }
-    pub fn visualize(&mut self) {
-
-        for x in 0..BOARD_SIZE {
-
-            visuals_board.push(vec![]);
-
-            for y in 0..BOARD_SIZE {
+    pub fn visualize(&mut self, unit_graphics: HashMap<String, HashMap<String, String>>) {
+        /* println!("{:?}", self.board); */
+        for y in 0..BOARD_SIZE {
+            println!();
+            for x in 0..BOARD_SIZE {
             
-                let unit = &self.board[x][y];
+                let unit = self.units.get(&self.board[y][x]);
                 match unit {
-                    Some(unit) => { continue },
-                    _ => { print(UNIT_GRAPHICS[unit.player_type][unit.unit_type]) }
+                    Some(unit) => { 
+
+                        print!(" ");
+                        print!("{}", unit_graphics[&unit.player_type][&unit.unit_type]);
+                        print!(" ");
+                    },
+                    _ => { 
+
+                        print!(" ☒ ");
+                    }
                 }
             }
-
-            println!("{}", x);
         }
+
+        println!();
+        println!();
     }
-    pub fn run(&mut self) {
+    pub fn run(&mut self, unit_graphics: HashMap<String, HashMap<String, String>>) {
 
         print!("tick for game of id");
         println!(" {}", self.id);
         println!("tick {}", self.tick);
+
+        /* self.visualize_grid(); */
+        self.visualize(unit_graphics);
 /* 
         if self.tick > 5 {
 
@@ -92,6 +113,18 @@ impl Game {
             return;
         }
  */
+
+
+
+        let mut units = self.units.clone();
+
+        for (unit_id, unit) in units.borrow_mut() {
+
+            unit.any_move(self);
+            print!("Unit pos");
+            println!("{:?}", unit.pos);
+        }
+
         self.tick += 1;
     }
     pub fn reset(&mut self) {
