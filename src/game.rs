@@ -1,4 +1,6 @@
 use std::{collections::{HashMap}, borrow::BorrowMut};
+use rand::{random, Rng};
+
 use crate::{units::{Unit, unit}, neural_network::NeuralNetwork, constants::{BOARD_SIZE}, manager::Manager, Pos, MoveRequest, player::Player};
 
 #[derive(Debug)]
@@ -12,7 +14,10 @@ pub struct Game {
      */
     pub players: HashMap<String, Player>,
     pub board: Vec<Vec<String>>,
-    pub winner: Option<NeuralNetwork>,
+    /**
+     * The ID of the winning neural network, if exists
+     */
+    pub winner: Option<String>,
 }
 
 impl Game {
@@ -46,9 +51,9 @@ impl Game {
     }
     pub fn init(&mut self, manager: &mut Manager) {
 
-        // Black
+        // White
 
-        let mut player_type = "black";
+        let mut player_type = "white";
         self.players.insert(player_type.to_string(), Player::new(player_type.to_string(), false));
 
         let mut y: i32 = 6;
@@ -68,9 +73,9 @@ impl Game {
         self.new_unit(manager, Pos { x: 3, y: y }, player_type.to_string(), "king".to_string());
         self.new_unit(manager, Pos { x: 4, y: y }, player_type.to_string(), "queen".to_string());
 
-        // White
+        // Black
 
-        player_type = "white";
+        player_type = "black";
         self.players.insert(player_type.to_string(), Player::new(player_type.to_string(), true));
 
         y = 1;
@@ -166,12 +171,21 @@ impl Game {
             break
         }
 
+        let mut kings: HashMap<String, bool> = HashMap::new();
+        kings.insert("black".to_string(), false);
+        kings.insert("white".to_string(), false);
+
         let mut move_requests: Vec<MoveRequest> = vec![];
 
         let unit_ids: Vec<String> = self.units.keys().cloned().collect();
         for unit_id in unit_ids {
 
             let unit = self.units.get(&unit_id).unwrap();
+
+            if unit.unit_type == "king" {
+                kings.insert(unit.player_type.clone(), true);
+            }
+
             match turn_player_type.as_deref() {
                 Some(turn_player_type) => {
 
@@ -190,10 +204,28 @@ impl Game {
             }
         }
 
-        for move_request in move_requests {
+        for (player_type, has_king) in kings {
+            if has_king { continue }
 
-            self.move_unit_to(move_request);
+            // Black lost
+
+            if player_type == "black" {
+
+                self.winner = Some(self.players.get(&"white".to_string()).unwrap().network_id.clone());
+                return
+            }
+
+            // White lost
+
+            self.winner = Some(self.players.get(&"black".to_string()).unwrap().network_id.clone());
+            return
         }
+
+        let mut rng = rand::thread_rng();
+        let index = rng.gen_range(0, move_requests.len() - 1);
+        let move_request = move_requests.get(index).unwrap().clone();
+
+        self.move_unit_to(move_request);
 
         self.tick += 1;
     }

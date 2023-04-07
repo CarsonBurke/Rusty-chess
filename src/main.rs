@@ -22,7 +22,7 @@ pub struct MoveRequest {
 async fn main() {
     println!("Hello, world!");
 
-    let mut manager = Manager::new(1, 1000);
+    let mut manager = Manager::new(1, 1);
     manager.init();
     manager.run().await;
 }

@@ -109,21 +109,21 @@ pub const KNIGHT_OFFSETS: [Pos; 8] = [
 ];
 pub const PAWN_ATTACK_OFFSETS_BLACK: [Pos; 2] = [
     Pos {
-        x: -1,
-        y: -1,
+        x: 1,
+        y: 1,
     },
     Pos {
-        x: 1,
-        y: -1,
+        x: -1,
+        y: 1,
     }
 ];
 pub const PAWN_ATTACK_OFFSETS_WHITE: [Pos; 2] = [
     Pos {
-        x: -1,
-        y: 1,
+        x: 1,
+        y: -1,
     },
     Pos {
-        x: 1,
-        y: 1,
+        x: -1,
+        y: -1,
     }
 ];

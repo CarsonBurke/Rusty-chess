@@ -42,7 +42,7 @@ impl Unit {
 
             let mut pos = Pos {
                 x: self.pos.x,
-                y: self.pos.y - 1
+                y: self.pos.y + 1
             };
             
             // If there is no unit
@@ -55,21 +55,15 @@ impl Unit {
                 moves.push(pos)
             }
 
-            pos = Pos {
+            let long_pos = Pos {
                 x: self.pos.x,
-                y: self.pos.y - 2,
+                y: self.pos.y + 2,
             };
-            
+
             // We haven't moved yet and there are no units in the way
 
-            let self_pos = self.pos.clone();
-
-            if is_pos_inside_board(&pos) && are_positions_same(&self.pos, &self.last_pos) && 
-            match game.find_unit_at_pos(&self_pos) {
-                None => false,
-                _ => true
-            } {
-                moves.push(pos);
+            if is_pos_inside_board(&long_pos) && are_positions_same(&self.pos, &self.last_pos) && !game.find_unit_at_pos(&pos).is_some() && !game.find_unit_at_pos(&long_pos).is_some() {
+                moves.push(long_pos);
             }
             
             for offset in PAWN_ATTACK_OFFSETS_BLACK {
@@ -80,14 +74,15 @@ impl Unit {
 
                 if !is_pos_inside_board(&pos) { continue }
 
-                let self_player_type = self.player_type.clone();
                 let unit_at_pos = game.find_unit_at_pos(&pos);
-
                 match unit_at_pos {
                     Some(unit_at_pos) => {
                         // Don't allow move on our own units
-
-                        if unit_at_pos.player_type == self_player_type { continue }
+    
+                        if unit_at_pos.player_type != self.player_type { 
+    
+                            moves.push(pos);                                                                                                                                                                                                                                
+                        }
                     },
                     _ => {},
                 };
@@ -100,34 +95,25 @@ impl Unit {
 
         let mut pos = Pos {
             x: self.pos.x,
-            y: self.pos.y + 1
+            y: self.pos.y - 1
         };
         
         // If there is no unit
 
-        if is_pos_inside_board(&pos) && match game.find_unit_at_pos(&pos) {
-            None => true,
-            _ => false
-        } {
+        if is_pos_inside_board(&pos) && !game.find_unit_at_pos(&pos).is_some() {
             
             moves.push(pos)
         }
 
-        pos = Pos {
+        let long_pos = Pos {
             x: self.pos.x,
-            y: self.pos.y + 2,
+            y: self.pos.y - 2,
         };
         
         // We haven't moved yet and there are no units in the way
 
-        let self_pos = self.pos.clone();
-
-        if is_pos_inside_board(&pos) && are_positions_same(&self.pos, &self.last_pos) && 
-        match game.find_unit_at_pos(&self_pos) {
-            None => false,
-            _ => true
-        } {
-            moves.push(pos);
+        if is_pos_inside_board(&long_pos) && are_positions_same(&self.pos, &self.last_pos) && !game.find_unit_at_pos(&pos).is_some() && !game.find_unit_at_pos(&long_pos).is_some() {
+            moves.push(long_pos);
         }
         
         for offset in PAWN_ATTACK_OFFSETS_WHITE {
@@ -138,14 +124,15 @@ impl Unit {
 
             if !is_pos_inside_board(&pos) { continue }
 
-            let self_player_type = self.player_type.clone();
             let unit_at_pos = game.find_unit_at_pos(&pos);
-
             match unit_at_pos {
                 Some(unit_at_pos) => {
                     // Don't allow move on our own units
 
-                    if unit_at_pos.player_type == self_player_type { continue }
+                    if unit_at_pos.player_type != self.player_type { 
+
+                        moves.push(pos);                                                                                                                                                                                                                                
+                    }
                 },
                 _ => {},
             };
@@ -165,14 +152,14 @@ impl Unit {
 
         if !is_pos_inside_board(&pos) { return None }
 
-        let self_player_type = self.player_type.clone();
         let unit_at_pos = game.find_unit_at_pos(&pos);
 
         // Make sure there is no unit of our type at the pos
 
         match unit_at_pos {
             Some(unit_at_pos) => {
-                if unit_at_pos.player_type == self_player_type { return None }
+
+                if unit_at_pos.player_type == self.player_type { return None }
             },
             _ => {}
         }
@@ -216,13 +203,21 @@ impl Unit {
         let mut moves = vec![];
 
         for offset in offsets {
+            
+            let mut mod_offset = offset.clone();
 
             // Keep checking offsets until
 
             loop {
-                let pos = self.try_offset(game, &offset);
-                match pos {
-                    Some(pos) => moves.push(pos),
+
+                let unit_move = self.try_offset(game, &mod_offset);
+                match unit_move {
+                    Some(unit_move) => {
+                        moves.push(unit_move);
+
+                        mod_offset.x += offset.x;
+                        mod_offset.y += offset.y;
+                    },
                     _ => break,
                 }
             }

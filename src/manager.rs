@@ -42,7 +42,7 @@ impl Manager {
         // White
 
         player_type_graphics = HashMap::new();
-        
+
         player_type_graphics.insert("king".to_string(), "♚".to_string());
         player_type_graphics.insert("queen".to_string(), "♛".to_string());
         player_type_graphics.insert("bishop".to_string(), "♝".to_string());
@@ -129,9 +129,14 @@ impl Manager {
             
             loop {
 
+                if game.tick > 500 {
+                    println!("Times up");
+                    break
+                }
+
                 let mut winner = &game.winner;
                 if let Some(winner) = winner {
-
+                    println!("Winner");
                     break;
                 }
 
