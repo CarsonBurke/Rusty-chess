@@ -1,9 +1,13 @@
 use std::{collections::HashMap};
 
 use crate::{game::Game, neural_network::NeuralNetwork, neural_network::Output, neural_network::Input};
-
+/* 
 use eventual::Timer;
 extern crate eventual;
+ */
+
+use tokio::time::{self, Duration};
+extern crate tokio;
 
 pub struct Manager {
     id_index: i128,
@@ -114,14 +118,14 @@ impl Manager {
     /**
     * Have one game running until all have been run, reset and repeat once all have been run
     */
-    pub fn run(&mut self) {
-
+    pub async fn run(&mut self) {
+        println!("d");
         for (id, game) in self.games.iter_mut() {
 
-            let timer = Timer::new();
-            let ticks = timer.interval_ms(self.tick_speed.try_into().unwrap()).iter();
+            let mut interval = time::interval(Duration::from_millis(self.tick_speed.try_into().unwrap()));
             
-            for _ in ticks {
+            loop {
+                println!("h");
 
                 let mut winner = &game.winner;
                 if let Some(winner) = winner {
@@ -133,6 +137,8 @@ impl Manager {
 
                 game.run(self.unit_graphics.clone());
                 self.tick += 1;
+
+                interval.tick().await;
             }
         }
 

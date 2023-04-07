@@ -8,6 +8,4 @@ edition = "2021"
 [dependencies]
 rand = "0.7.3"
 float-ord = "0.3.2"
-
-[dependencies.eventual]
-git = "https://github.com/carllerche/eventual"
+tokio = { version = "1.27.0", features = ["full"] }

@@ -13,10 +13,11 @@ pub struct Pos {
     y: i32,
 }
 
-fn main() {
+#[tokio::main]
+async fn main() {
     println!("Hello, world!");
 
     let mut manager = Manager::new(1, 1000);
     manager.init();
-    manager.run();
+    manager.run().await;
 }
