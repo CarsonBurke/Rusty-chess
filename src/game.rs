@@ -5,6 +5,7 @@ use crate::{units::{Unit, unit}, neural_network::NeuralNetwork, constants::{BOAR
 
 #[derive(Debug)]
 pub struct Game {
+    id_index: u64,
     pub id: String,
     pub tick: u64,
     pub units: HashMap<String, Unit>,
@@ -33,6 +34,7 @@ impl Game {
         }
 
         return Self {
+            id_index: 0,
             id,
             tick: 0,
             units: HashMap::new(),
@@ -41,9 +43,14 @@ impl Game {
             players: HashMap::new(),
         }
     }
-    fn new_unit(&mut self, manager: &mut Manager, pos: Pos, player_type: String, unit_type: String) {
+    pub fn new_id(&mut self) -> String {
+        
+        self.id_index += 1;
+        return (&self.id_index).to_string()
+    }
+    fn new_unit(&mut self, pos: Pos, player_type: String, unit_type: String) {
 
-        let unit = Unit::new(manager, self, pos, player_type, unit_type);
+        let unit = Unit::new(self, pos, player_type, unit_type);
         let clone = unit.clone();
         
         self.board[pos.y as usize][pos.x as usize] = unit.id.clone();
@@ -59,19 +66,19 @@ impl Game {
         let mut y: i32 = 6;
         for x in 0..BOARD_SIZE as i32 {
 
-            self.new_unit(manager, Pos { x: x, y: y }, player_type.to_string(), "pawn".to_string());
+            self.new_unit(Pos { x: x, y: y }, player_type.to_string(), "pawn".to_string());
         }
 
         y = 7;
 
-        self.new_unit(manager, Pos { x: 0, y: y }, player_type.to_string(), "castle".to_string());
-        self.new_unit(manager, Pos { x: 7, y: y }, player_type.to_string(), "castle".to_string());
-        self.new_unit(manager, Pos { x: 1, y: y }, player_type.to_string(), "knight".to_string());
-        self.new_unit(manager, Pos { x: 6, y: y }, player_type.to_string(), "knight".to_string());
-        self.new_unit(manager, Pos { x: 2, y: y }, player_type.to_string(), "bishop".to_string());
-        self.new_unit(manager, Pos { x: 5, y: y }, player_type.to_string(), "bishop".to_string());
-        self.new_unit(manager, Pos { x: 3, y: y }, player_type.to_string(), "king".to_string());
-        self.new_unit(manager, Pos { x: 4, y: y }, player_type.to_string(), "queen".to_string());
+        self.new_unit(Pos { x: 0, y: y }, player_type.to_string(), "castle".to_string());
+        self.new_unit(Pos { x: 7, y: y }, player_type.to_string(), "castle".to_string());
+        self.new_unit(Pos { x: 1, y: y }, player_type.to_string(), "knight".to_string());
+        self.new_unit(Pos { x: 6, y: y }, player_type.to_string(), "knight".to_string());
+        self.new_unit(Pos { x: 2, y: y }, player_type.to_string(), "bishop".to_string());
+        self.new_unit(Pos { x: 5, y: y }, player_type.to_string(), "bishop".to_string());
+        self.new_unit(Pos { x: 3, y: y }, player_type.to_string(), "king".to_string());
+        self.new_unit(Pos { x: 4, y: y }, player_type.to_string(), "queen".to_string());
 
         // Black
 
@@ -81,19 +88,19 @@ impl Game {
         y = 1;
         for x in 0..BOARD_SIZE as i32 {
 
-            self.new_unit(manager, Pos { x: x, y: y }, player_type.to_string(), "pawn".to_string());
+            self.new_unit(Pos { x: x, y: y }, player_type.to_string(), "pawn".to_string());
         }
 
         y = 0;
 
-        self.new_unit(manager, Pos { x: 0, y: y }, player_type.to_string(), "castle".to_string());
-        self.new_unit(manager, Pos { x: 7, y: y }, player_type.to_string(), "castle".to_string());
-        self.new_unit(manager, Pos { x: 1, y: y }, player_type.to_string(), "knight".to_string());
-        self.new_unit(manager, Pos { x: 6, y: y }, player_type.to_string(), "knight".to_string());
-        self.new_unit(manager, Pos { x: 2, y: y }, player_type.to_string(), "bishop".to_string());
-        self.new_unit(manager, Pos { x: 5, y: y }, player_type.to_string(), "bishop".to_string());
-        self.new_unit(manager, Pos { x: 3, y: y }, player_type.to_string(), "king".to_string());
-        self.new_unit(manager, Pos { x: 4, y: y }, player_type.to_string(), "queen".to_string());
+        self.new_unit(Pos { x: 0, y: y }, player_type.to_string(), "castle".to_string());
+        self.new_unit(Pos { x: 7, y: y }, player_type.to_string(), "castle".to_string());
+        self.new_unit(Pos { x: 1, y: y }, player_type.to_string(), "knight".to_string());
+        self.new_unit(Pos { x: 6, y: y }, player_type.to_string(), "knight".to_string());
+        self.new_unit(Pos { x: 2, y: y }, player_type.to_string(), "bishop".to_string());
+        self.new_unit(Pos { x: 5, y: y }, player_type.to_string(), "bishop".to_string());
+        self.new_unit(Pos { x: 3, y: y }, player_type.to_string(), "king".to_string());
+        self.new_unit(Pos { x: 4, y: y }, player_type.to_string(), "queen".to_string());
 
     }
     pub fn find_unit_at_pos(&self, pos: &Pos) -> Option<&Unit>  {
@@ -217,6 +224,7 @@ impl Game {
 
             // White lost
 
+
             self.winner = Some(self.players.get(&"black".to_string()).unwrap().network_id.clone());
             return
         }
@@ -259,11 +267,15 @@ impl Game {
 
         // Reset each coord of the board
 
-        let mut i: usize = 0;
-        while i < BOARD_SIZE {
+        let mut board: Vec<Vec<String>> = vec![];
 
-            self.board[i].clear();
-            i += 1;
-        } 
+        for y in 0..BOARD_SIZE {
+            board.push(vec![]);
+            for x in 0..BOARD_SIZE {
+                board[y].push("".to_string());
+            }
+        }
+
+        self.board = board;
     }
 }

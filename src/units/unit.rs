@@ -19,10 +19,10 @@ pub struct Unit {
  * Merge impl into Game for finer control with Game.units
  */
 impl Unit {
-    pub fn new(manager: &mut Manager, game: &Game, pos: Pos, player_type: String, unit_type: String) -> Self {
+    pub fn new(game: &mut Game, pos: Pos, player_type: String, unit_type: String) -> Self {
 
         return Self {
-            id: manager.new_id(),
+            id: game.new_id(),
             pos: pos.clone(),
             last_pos: pos.clone(),
             game_id: game.id.clone(),

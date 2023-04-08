@@ -1,6 +1,8 @@
-use std::{collections::HashMap};
+use std::{collections::HashMap, future::Future};
 
 use crate::{game::Game, neural_network::NeuralNetwork, neural_network::Output, neural_network::Input};
+use async_recursion::async_recursion;
+extern crate async_recursion;
 /* 
 use eventual::Timer;
 extern crate eventual;
@@ -112,7 +114,29 @@ impl Manager {
 
     pub fn reset(&mut self) {
 
+        let mut games: Vec<(&String, &Game)> = self.games.iter().collect();
+        games.sort_by(|a, b| a.1.tick.cmp(&b.1.tick));
+
+        let mut winning_games_by_fitness: Vec<(&String, &Game)> = vec![];
+
+        // Filter games that have winners
+
+        for (game_id, game) in games {
+
+            if game.winner.is_none() { continue }
+
+            winning_games_by_fitness.push((game_id, game));
+        }
+
+        // Sort winners by ticks to spent
+        
+        for (game_id, game) in winning_games_by_fitness {
+
+            println!("{:?}", game.tick);
+        }
+
         for (id, game) in self.games.iter_mut() {
+            
             /* Split up the parts of self we're trying to pass so we aren't passing self itself */
             game.reset()
         }
@@ -121,6 +145,7 @@ impl Manager {
     /**
     * Have one game running until all have been run, reset and repeat once all have been run
     */
+    #[async_recursion]
     pub async fn run(&mut self) {
 
         for (id, game) in self.games.iter_mut() {
@@ -149,6 +174,9 @@ impl Manager {
             }
         }
 
-        println!("End")
+        println!("End");
+
+        self.reset();
+        /* self.run().await; */
     }
 }
