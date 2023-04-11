@@ -80,7 +80,7 @@ impl Manager {
             game.init(self);
             self.games.insert(id, game);
 
-            for (player_id, player) in game.players {
+            for (player_id, player) in &game.players {
 
                  // neural net
 
@@ -193,7 +193,7 @@ impl Manager {
 
                 // The game doesn't have a winner, run it
 
-                game.run(self.unit_graphics.clone());
+                game.run(self.unit_graphics.clone(), self.neural_networks);
                 self.tick += 1;
 
                 interval.tick().await;

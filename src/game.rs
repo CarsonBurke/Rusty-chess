@@ -153,7 +153,7 @@ impl Game {
         println!();
         println!();
     }
-    pub fn run(&mut self, unit_graphics: HashMap<String, HashMap<String, String>>) {
+    pub fn run(&mut self, unit_graphics: HashMap<String, HashMap<String, String>>, neural_networks: &HashMap<String, NeuralNetwork>) {
 
         print!("tick for game of id");
         println!(" {}", self.id);
@@ -223,7 +223,6 @@ impl Game {
             }
 
             // White lost
-
 
             self.winner = Some(self.players.get(&"black".to_string()).unwrap().network_id.clone());
             return
