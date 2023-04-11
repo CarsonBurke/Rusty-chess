@@ -80,27 +80,53 @@ impl Manager {
             game.init(self);
             self.games.insert(id, game);
 
-            // neural net
+            for (player_id, player) in game.players {
 
-            let inputs: Vec<Input> = vec![
-                Input::new(
-                    "x".to_string(),
-                    vec![1., 3.],
-                    vec!["1".to_string(), "2".to_string()],
-                ),
-                Input::new(
-                    "y".to_string(),
-                    vec![2.],
-                    vec!["1".to_string()],
-                ),
-            ];
-            let outputs: Vec<Output> = vec![
-                Output::new("result".to_string()),
-            ];
+                 // neural net
 
-            let mut neural_network = NeuralNetwork::new();
-            neural_network.build(&inputs, outputs.len());
-            self.networks.insert(neural_network.id.clone(), neural_network);
+                let inputs: Vec<Input> = vec![
+                    Input::new(
+                        "pawn".to_string(),
+                        vec![0., 0., 0., 0., 0., 0., 0., 0.],
+                        vec!["0".to_string(), "0".to_string(), "0".to_string(), "0".to_string(), "0".to_string(), "0".to_string(), "0".to_string(), "0".to_string()],
+                    ),
+                    Input::new(
+                        "castle".to_string(),
+                        vec![0., 0.],
+                        vec!["1".to_string(), "1".to_string()],
+                    ),
+                    Input::new(
+                        "knight".to_string(),
+                        vec![0., 0.],
+                        vec!["2".to_string(), "2".to_string()],
+                    ),
+                    Input::new(
+                        "bishop".to_string(),
+                        vec![0., 0.],
+                        vec!["3".to_string(), "3".to_string()],
+                    ),
+                    Input::new(
+                        "king".to_string(),
+                        vec![0.],
+                        vec!["4".to_string(), "4".to_string()],
+                    ),
+                    Input::new(
+                        "queen".to_string(),
+                        vec![0.],
+                        vec!["5".to_string(), "5".to_string()],
+                    ),
+                ];
+                let outputs: Vec<Output> = vec![
+                    Output::new("move from x".to_string()),
+                    Output::new("move from y".to_string()),
+                    Output::new("move to x".to_string()),
+                    Output::new("move to y".to_string()),
+                ];
+    
+                let mut neural_network = NeuralNetwork::new();
+                neural_network.build(&inputs, outputs.len());
+                self.networks.insert(neural_network.id.clone(), neural_network);   
+            }
 
             i += 1;
         }
