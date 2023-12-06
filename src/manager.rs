@@ -77,10 +77,12 @@ impl Manager {
 
             let id = self.new_id();
             let mut game = Game::new(id.clone());
+
             game.init(self);
             self.games.insert(id, game);
 
-            for (player_id, player) in &game.players {
+            let mut p = 0;
+            while p < 2 {
 
                  // neural net
 
@@ -126,6 +128,8 @@ impl Manager {
                 let mut neural_network = NeuralNetwork::new();
                 neural_network.build(&inputs, outputs.len());
                 self.networks.insert(neural_network.id.clone(), neural_network);   
+
+                p += 1;
             }
 
             i += 1;
@@ -193,7 +197,7 @@ impl Manager {
 
                 // The game doesn't have a winner, run it
 
-                game.run(self.unit_graphics.clone(), self.neural_networks);
+                game.run(self.unit_graphics.clone(), &self.networks);
                 self.tick += 1;
 
                 interval.tick().await;

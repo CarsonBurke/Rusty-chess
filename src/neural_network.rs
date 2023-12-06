@@ -381,7 +381,7 @@ impl NeuralNetwork {
 
     }
 
-    pub unsafe fn clone(&self) -> NeuralNetwork  {
+    pub unsafe fn custom_clone(&self) -> NeuralNetwork  {
 
         let new_neural_network = NeuralNetwork {
             id: NEURAL_NETWORK_MANAGER.lock().unwrap().new_id(),

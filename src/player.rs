@@ -1,6 +1,6 @@
 use crate::{Pos, neural_network::NeuralNetwork, game::Game, manager::Manager};
 
-#[derive(Default, Debug)]
+#[derive(Default, Debug, Clone)]
 pub struct Player {
     pub player_type: String,
     pub points: i32,
